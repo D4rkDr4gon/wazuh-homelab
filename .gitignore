@@ -3,6 +3,8 @@ volumes/
 
 # SSL certificates (auto-generated, do not commit!)
 config/wazuh_indexer_ssl_certs/
+scripts/wazuh-certificates/
+certs/
 
 # macOS
 .DS_Store
