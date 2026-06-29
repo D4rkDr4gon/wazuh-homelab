@@ -1,0 +1,16 @@
+# Docker volumes
+volumes/
+
+# SSL certificates (auto-generated, do not commit!)
+config/wazuh_indexer_ssl_certs/
+
+# macOS
+.DS_Store
+
+# Editor temp files
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
