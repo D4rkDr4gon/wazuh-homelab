@@ -138,6 +138,48 @@ To change them:
 2. Update the hashed passwords in `config/wazuh_indexer/internal_users.yml`
 3. Restart the stack: `docker compose restart`
 
+## Integrations
+
+### VirusTotal
+
+The manager is configured with a native VirusTotal integration for file hash lookups via syscheck:
+
+```xml
+<integration>
+  <name>virustotal</name>
+  <api_key>VT_API_KEY</api_key>
+  <group>syscheck</group>
+  <alert_format>json</alert_format>
+</integration>
+```
+
+**Status:** ✅ Functional — `wazuh-integratord` reports "Enabling integration for 'virustotal'". Alerts are triggered when syscheck detects files with hashes matching VirusTotal's database.
+
+### TheHive (SOAR / Case Management)
+
+A custom Python integration forwards Wazuh alerts (level ≥ 3) to TheHive 5:
+
+```xml
+<integration>
+  <name>custom-thehive</name>
+  <level>3</level>
+  <alert_format>json</alert_format>
+</integration>
+```
+
+The integration script reads `THEHIVE_URL` and `THEHIVE_API_KEY` from environment variables set in `docker-compose.yml`.
+
+**Files:**
+- `config/integrations/custom-thehive` — Shell wrapper (Wazuh calls this)
+- `config/integrations/custom-thehive.py` — Python script (forwards alerts to TheHive API)
+
+**Service user in TheHive:**
+- Login: `wazuh-final@thehive.local`
+- Profile: `analyst` (has `manageAlert/create`, `manageCase/create`, etc.)
+- API key set via `THEHIVE_API_KEY` env var
+
+> **⚠️ Known limitation:** TheHive 5's `testing` Docker profile has a permission issue where Organisation-type profiles (`analyst`, `org-admin`) show correct permissions in queries but cannot perform mutation operations (create alerts/cases) via the REST API. This is a profile initialization issue in the testing profile — using the `prod1-thehive` profile resolves it. See [[MAN-001244]] for details.
+
 ## Project Structure
 
 ```
@@ -154,6 +196,7 @@ wazuh/
 │   ├── wazuh_dashboard/
 │   │   ├── opensearch_dashboards.yml  # Dashboard configuration
 │   │   └── wazuh.yml                  # Wazuh plugin configuration
+│   ├── integrations/                # Custom integration scripts (TheHive, etc.)
 │   └── wazuh_indexer_ssl_certs/    # SSL certificates (auto-generated)
 ├── scripts/
 │   └── wazuh-certs-tool.sh         # Certificate generation script
