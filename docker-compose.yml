@@ -45,6 +45,8 @@ services:
       - SSL_KEY=/etc/ssl/filebeat.key
       - API_USERNAME=wazuh-wui
       - API_PASSWORD=MyS3cr37P450r.*-
+      - THEHIVE_URL=http://172.20.0.1:9000
+      - THEHIVE_API_KEY=OfTXq90eTNeIGVUMpoQG8QXCOx5yP+if
     volumes:
       # Volúmenes nombrados para datos persistentes
       - wazuh_api_configuration:/var/ossec/api/configuration
