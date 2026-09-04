@@ -188,6 +188,8 @@ The integration script reads `THEHIVE_URL` and `THEHIVE_API_KEY` from environmen
 
 > **⚠️ Known limitation:** TheHive 5's `testing` Docker profile has a permission issue where Organisation-type profiles (`analyst`, `org-admin`) show correct permissions in queries but cannot perform mutation operations (create alerts/cases) via the REST API. This is a profile initialization issue in the testing profile — using the `prod1-thehive` profile resolves it. See [[MAN-001244]] for details.
 
+> The TheHive + Cortex stack itself lives in a sibling repo: [thehive-homelab](https://github.com/D4rkDr4gon/thehive-homelab).
+
 ## Project Structure
 
 ```
