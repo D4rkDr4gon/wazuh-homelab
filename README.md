@@ -125,18 +125,26 @@ ports:
 
 ### Passwords
 
-Sensitive passwords are set via environment variables in `docker-compose.yml`. The following credentials should be changed:
+Sensitive passwords are **not** committed to the repo — `docker-compose.yml` reads them from a local `.env` file (gitignored). Copy the template and fill in your own values:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `INDEXER_PASSWORD` | `REDACTED` | OpenSearch admin user |
-| `API_PASSWORD` | `REDACTED` | Wazuh API user (wazuh-wui) |
-| `DASHBOARD_PASSWORD` | `kibanaserver` | Dashboard internal user |
+```bash
+cp .env.example .env
+```
 
-To change them:
-1. Update the passwords in `docker-compose.yml`
-2. Update the hashed passwords in `config/wazuh_indexer/internal_users.yml`
-3. Restart the stack: `docker compose restart`
+| Variable | Description |
+|----------|-------------|
+| `INDEXER_PASSWORD` | OpenSearch `admin` user |
+| `DASHBOARD_PASSWORD` | OpenSearch `kibanaserver` user |
+| `API_PASSWORD` | Wazuh API user (`wazuh-wui`) |
+| `THEHIVE_API_KEY` | TheHive integration service-account key |
+
+To change them once the stack is already running (rotation), don't just edit `.env` and restart — the passwords also live in stores that `.env` doesn't touch:
+
+1. **OpenSearch (`INDEXER_PASSWORD`/`DASHBOARD_PASSWORD`)**: generate new bcrypt hashes with `hash.sh` (see `wazuh-manager` skill), update `config/wazuh_indexer/internal_users.yml`, then push them live with `securityadmin.sh` — editing the YAML alone does not change the live cluster's accepted password.
+2. **Wazuh API (`API_PASSWORD`)**: use the API itself (`PUT /security/users/{id}`) rather than just the env var, then also update `config/wazuh_dashboard/wazuh.yml` (the dashboard's own copy of this password) so the dashboard↔API integration keeps working.
+3. Update `.env` with the new values and restart: `docker compose up -d --force-recreate wazuh.manager wazuh.dashboard`.
+
+The VirusTotal `<api_key>` in `config/wazuh_cluster/wazuh_manager.conf` is a static XML value (no env-var interpolation) — the tracked file holds a placeholder; keep your real key only in your local, uncommitted copy.
 
 ## Integrations
 

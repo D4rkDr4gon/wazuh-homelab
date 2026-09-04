@@ -11,16 +11,16 @@ _meta:
 ## Demo users
 
 admin:
-  hash: "REDACTED_BCRYPT_HASH"
+  hash: "$2y$12$7fhG.R147uskrWPkoy3tsO9f51R2v9NiHWXybuUiLh72JPBPeAG7y"
   reserved: true
   backend_roles:
   - "admin"
-  description: "Demo admin user"
+  description: "Admin user"
 
 kibanaserver:
-  hash: "REDACTED_BCRYPT_HASH"
+  hash: "$2y$12$Z7tIR.J7VJdMgN9ijDjFmOsCnbDe2ME4P2M6Uy9pImFE..l1s1xpG"
   reserved: true
-  description: "Demo kibanaserver user"
+  description: "Dashboard internal user"
 
 kibanaro:
   hash: "$2a$12$JJSXNfTowz7Uu5ttXfeYpeYE0arACvcwlPBStB1F.MI7f0U9Z4DGC"

@@ -1,3 +1,6 @@
+# Secretos (usar .env.example como template)
+.env
+
 # Docker volumes
 volumes/
 
